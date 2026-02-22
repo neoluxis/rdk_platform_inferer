@@ -1,6 +1,6 @@
-[submodule "unitransmit"]
-	path = unitransmit
-	url = https://github.com/neoluxis/unitransmit-cpp.git
-[submodule "onnx_runner"]
-	path = onnx_runner
+[submodule "3rdparty/generic_onnx_inferencer_pipeline-cpp"]
+	path = 3rdparty/generic_onnx_inferencer_pipeline-cpp
 	url = https://github.com/neoluxis/generic_onnx_inferencer_pipeline-cpp.git
+[submodule "3rdparty/unitransmit-cpp"]
+	path = 3rdparty/unitransmit-cpp
+	url = https://github.com/neoluxis/unitransmit-cpp.git
