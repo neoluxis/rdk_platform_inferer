@@ -4,8 +4,8 @@
 
 其中 `onnx` 模型使用 `onnxruntime` 进行推理，`bin` 格式模型使用地瓜提供的 `hobot_dnn`
 
-- 对于 `onnx` 模型，可以直接在电脑编译，调试运行；同时配置了 docker 可以用于交叉编译。  
-本地调试时，我直接使用了地瓜机器人提供的 RDK 平台的 rootfs 打包 docker 镜像，具体操作方法可以参考博客文章: 
+- 对于 `onnx` 模型，可以直接在电脑编译，调试运行；同时配置了 docker 可以用于交叉编译。
+本地调试时，我直接使用了地瓜机器人提供的 RDK 平台的 rootfs 打包 docker 镜像，具体操作方法可以参考博客文章:
 [配置交叉编译环境 - PC to Raspi/RDK/…](https://me.neolux.eu.org/2026/02/05/linux/cross_compile_pc2arm/)
 
 - 对于 `bin` 模型，由于 x86 平台没有可用的 BPU 加速单元，也没有对应的驱动，因此需要在板端调试。编译则可以在板端或交叉编译环境中进行
@@ -32,4 +32,3 @@ cmake --build build -j
 ## Note
 
 该项目为灵巧手项目部署模型使用，因此数据获取、前后处理、结果处理均为灵巧手项目所需，同时配有注释，编译迁移其他项目。可以 [fork 本项目](https://github.com/neoluxis/rdk_platform_inferer/fork) 后修改
-

@@ -44,7 +44,7 @@ labeling: # 标签配置
     ok: [0, 0, 2, 2, 2] # OK 手势
     peace: [0, 2, 2, 0, 0] # V 手势
   labels:
-    - 收缩 
+    - 收缩
     - 放松
     - 舒张
 
@@ -276,7 +276,7 @@ export:
   format: onnx # 导出格式，可选值：onnx, torchscript
   onnx:
     opset_version: 18 # ONNX opset 版本（推荐 18+，支持最新特性）
-    dynamic_axes: 
+    dynamic_axes:
       enabled: true # 是否启用动态轴（支持可变批量大小和时间步）
       # 注意：动态轴配置仅用于文档说明，实际使用简化版本
       # 简化版本会对 batch_size 维度启用动态轴
@@ -285,5 +285,3 @@ export:
     # trace: 通过追踪执行路径导出（推荐，适用于大多数模型）
     # script: 通过分析代码导出（适用于包含控制流的模型）
     optimize: true # 是否优化模型（启用推理优化）
-
-
