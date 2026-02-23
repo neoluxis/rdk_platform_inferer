@@ -1,0 +1,22 @@
+name: auto-create-pr
+
+on:
+  push:
+    branches-ignore: [ main, master ]
+
+jobs:
+  create-pr:
+    runs-on: ubuntu-latest
+    # 避免在已经合并或正在处理的分支上重复操作
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: "auto: format and build check passed"
+          title: "Auto PR: ${{ github.ref_name }} to main"
+          body: "This PR was automatically created by GitHub Actions after a successful push."
+          branch: ${{ github.ref_name }} # 保持当前分支
+          base: main                     # 目标分支
