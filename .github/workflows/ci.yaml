@@ -59,7 +59,8 @@ jobs:
           echo "ONNXRUNTIME_ROOT=${{ github.workspace }}/opt/onnxruntime" >> $GITHUB_ENV
 
       - name: Configure CMake
-        run: cmake -B build -S . \
+        run: |
+          cmake -B build -S . \
           -DCMAKE_BUILD_TYPE=Release \
           -DONNXRUNTIME_ROOT=${{ env.ONNXRUNTIME_ROOT }} \
           -Donnxruntime_DIR=${{ env.ONNXRUNTIME_ROOT }} \
