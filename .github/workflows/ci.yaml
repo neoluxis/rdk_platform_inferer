@@ -42,10 +42,26 @@ jobs:
             build-essential \
             cmake \
             libeigen3-dev \
-            libyaml-cpp-dev  # 修复 find_package(yaml-cpp) 失败
+            libyaml-cpp-dev
+
+      - name: Install ONNX Runtime
+        run: |
+          # 定义版本和下载链接 (以 1.16.3 为例，可根据你的项目需求调整)
+          ORT_VERSION=1.16.3
+          ORT_FILE=onnxruntime-linux-x64-$ORT_VERSION.tgz
+          URL=https://github.com/microsoft/onnxruntime/releases/download/v$ORT_VERSION/$ORT_FILE
+
+          curl -L $URL -o $ORT_FILE
+          mkdir -p opt/onnxruntime
+          tar -xzf $ORT_FILE -C opt/onnxruntime --strip-components=1
+
+          # 将路径写入环境变量，方便后续 CMake 使用
+          echo "ONNXRUNTIME_ROOT=${{ github.workspace }}/opt/onnxruntime" >> $GITHUB_ENV
 
       - name: Configure CMake
-        run: cmake -B build -S . -DCMAKE_BUILD_TYPE=Release
+        run: cmake -B build -S . \
+          -DCMAKE_BUILD_TYPE=Release \
+          -DONNXRUNTIME_ROOT=${{ env.ONNXRUNTIME_ROOT }}
 
       - name: Build Project
         run: cmake --build build --config Release -j $(nproc)
