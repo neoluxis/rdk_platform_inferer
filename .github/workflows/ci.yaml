@@ -1,7 +1,8 @@
 name: C++ CI (Lint & Build)
 
 on:
-  branches:
+  push:
+    branches:
       - '**'
       - '!main'
       - '!master'
