@@ -1,4 +1,4 @@
-# 灵巧手 RDK 平台推理库
+# RDK 平台推理库
 
 在 RDK 平台部署的推理代码。支持 `onnx` 模型和地瓜机器人 `bin` 格式模型。
 
@@ -29,4 +29,7 @@ cmake -S . -B build -DINFERER_BUILD_APP=ON
 cmake --build build -j
 ```
 
+## Note
+
+该项目为灵巧手项目部署模型使用，因此数据获取、前后处理、结果处理均为灵巧手项目所需，同时配有注释，编译迁移其他项目。可以 [fork 本项目](https://github.com/neoluxis/rdk_platform_inferer/fork) 后修改
 

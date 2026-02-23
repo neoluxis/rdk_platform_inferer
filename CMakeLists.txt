@@ -17,17 +17,34 @@ if(INFERER_USING_HOBOT_DNN)
 endif(INFERER_USING_HOBOT_DNN)
 add_subdirectory(3rdparty/unitransmit-cpp)
 
-set(SOURCES
+find_package(Eigen3 REQUIRED)
+
+set(INFERER_SOURCES
     ${PROJECT_NAME}/src/rdk_platform_inferer.cpp
+)
+
+set(UTIL_SOURCES
+    ${PROJECT_NAME}/src/pre_proc.cpp
+    ${PROJECT_NAME}/src/post_proc.cpp
 )
 
 set(INCLUDE_DIRECTORIES
     ${PROJECT_NAME}/include
 )
 
-add_library(${PROJECT_NAME} SHARED ${SOURCES})
+add_library(${PROJECT_NAME} SHARED ${INFERER_SOURCES})
 
 target_include_directories(${PROJECT_NAME} PUBLIC ${INCLUDE_DIRECTORIES})
+target_link_libraries(${PROJECT_NAME} Eigen3::Eigen)
+
+if(CMAKE_BUILD_TYPE STREQUAL "Release")
+    set_target_properties(${PROJECT_NAME} PROPERTIES
+        CXX_VISIBILITY_PRESET hidden
+        VISIBILITY_INLINES_HIDDEN 1
+    )
+    target_compile_options(${PROJECT_NAME} PRIVATE -O3 -march=native)
+endif(CMAKE_BUILD_TYPE)
+
 
 if(INFERER_BUILD_APP)
     set(APP_SOURCES
