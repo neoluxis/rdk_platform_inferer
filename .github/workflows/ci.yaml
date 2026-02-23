@@ -1,0 +1,44 @@
+name: C++ CI (Lint & Build)
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  # 任务 1：格式检查
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+      - name: Run pre-commit
+        run: |
+          pip install pre-commit
+          pre-commit run --all-files
+
+  # 任务 2：编译检查
+  build:
+    runs-on: ubuntu-latest
+    # 只有格式检查过了，才浪费资源去编译
+    needs: lint
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Dependencies
+        run: |
+          sudo apt-get update
+          # 安装编译工具链和 Eigen3
+          sudo apt-get install -y build-essential cmake libeigen3-dev
+
+      - name: Configure CMake
+        # 假设你的 CMakeLists.txt 在项目根目录或 cpp/rdk_infer 下
+        # 如果在子目录，请修改 working-directory
+        run: cmake -B build -S . -DCMAKE_BUILD_TYPE=Release
+
+      - name: Build Project
+        run: cmake --build build --config Release -j $(nproc)
