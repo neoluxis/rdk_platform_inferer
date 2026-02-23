@@ -8,7 +8,7 @@
 #include "iostream"
 
 namespace cc::neolux::algo::rdk_platform_inferer {
-PostProcess::PostProcess(/* args */) {}
+PostProcess::PostProcess() {}
 
 PostProcess::~PostProcess() = default;
 
