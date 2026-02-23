@@ -10,8 +10,23 @@
 
 - 对于 `bin` 模型，由于 x86 平台没有可用的 BPU 加速单元，也没有对应的驱动，因此需要在板端调试。编译则可以在板端或交叉编译环境中进行
 
+## 交叉编译环境配置
+
+可以参考博客文章配置，但需要把对应镜像名称设置为 `rdkx3-img`；或者自定义名称后，在 `Dockerfile` 和 `docker-compose.yaml` 中做对应修改
+
 ## 相关工作
 
 - 灵巧手项目依赖于 `unitransmit-cpp` 与其它设备进行通信，其提供了一个统一的通信接口用于多种协议通讯的统一解析
 - onnx 推理部分使用了 `generic_onnx_inferencer_pipeline-cpp`，提供了一个通用的推理管线，在本项目中只需要提供对应的前后处理方法即可
 - `hobot_dnn` 推理部分使用了 `hobot_dnn_inferencer_pipeline-cpp`，其提供的内容类似与 onnx 部分
+
+## Usage
+
+```bash
+git clone https://github.com/neoluxis/rdk_platform_inferer.git --recursive
+cd rdk_platform_inferer
+cmake -S . -B build -DINFERER_BUILD_APP=ON
+cmake --build build -j
+```
+
+
