@@ -67,20 +67,20 @@ jobs:
 
   # 创建 PR (只有编译通过才提起)
   create-pr:
-    runs-on: ubuntu-latest
-    needs: [lint, build]
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0 # 必须设为 0，否则差异计算不准
+      runs-on: ubuntu-latest
+      needs: [lint, build]
+      steps:
+        - uses: actions/checkout@v4
+          with:
+            fetch-depth: 0 # 必须！否则无法正确对比差异
+            submodules: recursive
 
-      - name: Create Pull Request
-        uses: peter-evans/create-pull-request@v6
-        with:
-          token: ${{ secrets.AUTO_CREATE_PR }}
-          title: "Auto PR: ${{ github.ref_name }}"
-          commit-message: "chore: verified build"
-          branch: ${{ github.ref_name }}
-          base: main
-          # 强制创建一个新分支名来测试，看看是否还会提示无差异
-          # branch-suffix: timestamp
+        - name: Create Pull Request
+          uses: peter-evans/create-pull-request@v6
+          with:
+            token: ${{ secrets.AUTO_CREATE_PR }}
+            title: "Auto PR: ${{ github.ref_name }}"
+            branch: ${{ github.ref_name }} # 保持分支名一致
+            base: main
+            delete-branch: false # 暂时关闭删除功能
+            commit-strategy: always # 强制检查差异
