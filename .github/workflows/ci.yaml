@@ -1,40 +1,39 @@
-name: C++ CI (Lint & Build)
+name: C++ CI and Auto PR
 
 on:
   push:
+    # 在非主分支 push 时触发
     branches:
       - '**'
       - '!main'
       - '!master'
-  pull_request:
-    branches: [ main, master ]
 
 jobs:
-  # 任务 1：格式检查
+  # 格式检查
   lint:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.10'
+
       - name: Run pre-commit
         run: |
           pip install pre-commit
           pre-commit run --all-files
 
-  # 任务 2：编译检查
+  # 编译检查 (只有 lint 通过才运行)
   build:
     runs-on: ubuntu-latest
     needs: lint
     steps:
-      # 1. 关键：添加 submodules 参数来拉取 3rdparty 依赖
       - uses: actions/checkout@v4
         with:
-          submodules: recursive  # 递归拉取所有子模块
+          submodules: recursive
 
-      # 2. 更新安装依赖：添加 libyaml-cpp-dev
       - name: Install Dependencies
         run: |
           sudo apt-get update
@@ -46,25 +45,41 @@ jobs:
 
       - name: Install ONNX Runtime
         run: |
-          # 定义版本和下载链接 (以 1.16.3 为例，可根据你的项目需求调整)
           ORT_VERSION=1.16.3
           ORT_FILE=onnxruntime-linux-x64-$ORT_VERSION.tgz
           URL=https://github.com/microsoft/onnxruntime/releases/download/v$ORT_VERSION/$ORT_FILE
-
           curl -L $URL -o $ORT_FILE
           mkdir -p opt/onnxruntime
           tar -xzf $ORT_FILE -C opt/onnxruntime --strip-components=1
-
-          # 将路径写入环境变量，方便后续 CMake 使用
+          # 将绝对路径写入环境变量
           echo "ONNXRUNTIME_ROOT=${{ github.workspace }}/opt/onnxruntime" >> $GITHUB_ENV
 
       - name: Configure CMake
         run: |
           cmake -B build -S . \
-          -DCMAKE_BUILD_TYPE=Release \
-          -DONNXRUNTIME_ROOT=${{ env.ONNXRUNTIME_ROOT }} \
-          -Donnxruntime_DIR=${{ env.ONNXRUNTIME_ROOT }} \
-          -DCMAKE_POLICY_DEFAULT_CMP0144=NEW
+            -DCMAKE_BUILD_TYPE=Release \
+            -DONNXRUNTIME_ROOT="${{ env.ONNXRUNTIME_ROOT }}" \
+            -Donnxruntime_DIR="${{ env.ONNXRUNTIME_ROOT }}/lib/cmake/onnxruntime" \
+            -DCMAKE_POLICY_DEFAULT_CMP0144=NEW
 
       - name: Build Project
         run: cmake --build build --config Release -j $(nproc)
+
+  # 创建 PR (只有编译通过才提起)
+  create-pr:
+    runs-on: ubuntu-latest
+    needs: [lint, build]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v6
+        with:
+          # 请确保已在 Secrets 中配置过 AUTO_CREATE_PR 这个 PAT
+          token: ${{ secrets.AUTO_CREATE_PR }}
+          title: "Auto PR: ${{ github.ref_name }} (Build Passed)"
+          commit-message: "chore: auto-format and build verified"
+          branch: ${{ github.ref_name }}
+          base: main
+          # 自动合并后是否删除该分支（建议开启）
+          delete-branch: true
