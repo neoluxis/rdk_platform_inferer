@@ -12,7 +12,8 @@
 
 ## 交叉编译环境配置
 
-可以参考博客文章配置，但需要把对应镜像名称设置为 `rdkx3-img`；或者自定义名称后，在 `Dockerfile` 和 `docker-compose.yaml` 中做对应修改
+可以参考博客文章配置，但需要把对应镜像名称设置为 `rdkx3-img`；
+或者自定义名称后，在 `Dockerfile` 和 `docker-compose.yaml` 中做对应修改
 
 ## 相关工作
 
