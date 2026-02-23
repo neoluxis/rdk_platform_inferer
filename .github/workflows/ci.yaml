@@ -71,15 +71,16 @@ jobs:
     needs: [lint, build]
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # 必须设为 0，否则差异计算不准
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v6
         with:
-          # 请确保已在 Secrets 中配置过 AUTO_CREATE_PR 这个 PAT
           token: ${{ secrets.AUTO_CREATE_PR }}
-          title: "Auto PR: ${{ github.ref_name }} (Build Passed)"
-          commit-message: "chore: auto-format and build verified"
+          title: "Auto PR: ${{ github.ref_name }}"
+          commit-message: "chore: verified build"
           branch: ${{ github.ref_name }}
           base: main
-          # 自动合并后是否删除该分支（建议开启）
-          delete-branch: true
+          # 强制创建一个新分支名来测试，看看是否还会提示无差异
+          # branch-suffix: timestamp
