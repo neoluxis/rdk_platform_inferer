@@ -19,7 +19,7 @@
 
 - 灵巧手项目依赖于 `unitransmit-cpp` 与其它设备进行通信，其提供了一个统一的通信接口用于多种协议通讯的统一解析
 - onnx 推理部分使用了 `generic_onnx_inferencer_pipeline-cpp`，提供了一个通用的推理管线，在本项目中只需要提供对应的前后处理方法即可
-- `hobot_dnn` 推理部分使用了 `hobot_dnn_inferencer_pipeline-cpp`，其提供的内容类似与 onnx 部分
+- `hobot_dnn` 推理部分使用了 `hobot_dnn_inferencer_pipeline-cpp`，其提供的内容类似与 onnx 部分（相比于地瓜机器人提供的推理库，添加了库，并不依赖 ROS2）
 
 ## Usage
 
