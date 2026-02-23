@@ -9,7 +9,7 @@
 #include "iostream"
 
 namespace cc::neolux::algo::rdk_platform_inferer {
-PreProcess::PreProcess(/* args */) {}
+PreProcess::PreProcess() {}
 
 PreProcess::~PreProcess() = default;
 
