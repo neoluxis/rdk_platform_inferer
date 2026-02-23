@@ -27,20 +27,24 @@ jobs:
   # 任务 2：编译检查
   build:
     runs-on: ubuntu-latest
-    # 只有格式检查过了，才浪费资源去编译
     needs: lint
     steps:
+      # 1. 关键：添加 submodules 参数来拉取 3rdparty 依赖
       - uses: actions/checkout@v4
+        with:
+          submodules: recursive  # 递归拉取所有子模块
 
+      # 2. 更新安装依赖：添加 libyaml-cpp-dev
       - name: Install Dependencies
         run: |
           sudo apt-get update
-          # 安装编译工具链和 Eigen3
-          sudo apt-get install -y build-essential cmake libeigen3-dev
+          sudo apt-get install -y \
+            build-essential \
+            cmake \
+            libeigen3-dev \
+            libyaml-cpp-dev  # 修复 find_package(yaml-cpp) 失败
 
       - name: Configure CMake
-        # 假设你的 CMakeLists.txt 在项目根目录或 cpp/rdk_infer 下
-        # 如果在子目录，请修改 working-directory
         run: cmake -B build -S . -DCMAKE_BUILD_TYPE=Release
 
       - name: Build Project
