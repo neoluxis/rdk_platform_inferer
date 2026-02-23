@@ -14,14 +14,15 @@ repos:
     hooks:
       - id: clang-format
         # 指定处理的文件后缀
-        types_or: [c++, cpp, c, objc, objcpp, cuda, header]
+        # types_or: [c++, c, objc, objcpp, cuda, header]
+        files: \.(h|cpp|hpp|c|cc|cxx)$
 
   # 3. Python 格式化 (Black)
   - repo: https://github.com/psf/black
     rev: 23.12.1
     hooks:
       - id: black
-        language_version: python3
+        files: \.py$
 
   # 4. Python 导入语句排序
   - repo: https://github.com/pycqa/isort
